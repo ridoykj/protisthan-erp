@@ -1,0 +1,8 @@
+/* @font-face {
+    font-family: 'kalpurush';
+    src: url('fonts/kalpurush/kalpurush.ttf') format('truetype');
+} */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
