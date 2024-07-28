@@ -1,8 +1,8 @@
 import { useViewConfig } from '@vaadin/hilla-file-router/runtime.js';
 import type { ViewConfig } from '@vaadin/hilla-file-router/types.js';
 import { effect, signal } from '@vaadin/hilla-react-signals';
-import MainLayout from 'Frontend/views/module/@layout';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../main.css';
 
 export const config: ViewConfig = {
@@ -22,12 +22,18 @@ effect(() => {
 (window as any).Vaadin.documentTitleSignal = documentTitleSignal;
 
 const MainView = () => {
+  const navigate = useNavigate();
   const currentTitle = useViewConfig()?.title ?? defaultTitle;
   useEffect(() => {
     documentTitleSignal.value = currentTitle;
   }, [currentTitle]);
 
-  return <MainLayout />;
+  useEffect(() => {
+    navigate('module');
+  }, []);
+
+  // return <MainLayout />;
+  return <h1>Redrect on...</h1>;
 };
 
 export default MainView;

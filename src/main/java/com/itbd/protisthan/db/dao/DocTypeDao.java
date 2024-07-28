@@ -49,8 +49,7 @@ public class DocTypeDao {
     @Column(name = "tx_naming_rule", length = 40)
     private String namingRule;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "tx_parent_doc_type_key", referencedColumnName = "tx_doc_type_key")
-//    private DocTypeDao docType;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tx_parent_doc_type_key", referencedColumnName = "tx_doc_type_key")
+    private DocTypeDao docType;
 }

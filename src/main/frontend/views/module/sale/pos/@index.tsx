@@ -48,6 +48,7 @@ const PosView: React.FC = () => {
       '@type': 'propertyString',
     };
 
+    console.log('hello jhdgd');
     const andFilter: AndFilter = {
       '@type': 'and',
       children: [categoryFilter],

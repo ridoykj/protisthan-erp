@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @Theme(value = "protisthan-erp")
-
 @PWA(name = "Protisthan", shortName = "protisthan", iconPath = "favicon/favicon.png")
 public class ProtisthanApplication implements AppShellConfigurator {
 

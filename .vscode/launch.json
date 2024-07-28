@@ -12,6 +12,13 @@
       "webRoot": "${workspaceFolder}/src/main/frontend"
     },
     {
+      "name": "Launch Edge",
+      "request": "launch",
+      "type": "msedge",
+      "url": "http://localhost:8088/",
+      "webRoot": "${workspaceFolder}/src/main/frontend"
+    },
+    {
       "type": "java",
       "name": "Launch Application",
       "request": "launch",
@@ -23,13 +30,6 @@
       "name": "Attach to Application started using Maven",
       "hostName": "localhost",
       "port": 5247
-    },
-    {
-      "name": "Launch Edge",
-      "request": "launch",
-      "type": "msedge",
-      "url": "http://localhost:8088/",
-      "webRoot": "${workspaceFolder}/src/main/frontend"
     },
   ]
 }
