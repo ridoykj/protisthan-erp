@@ -102,7 +102,7 @@ const FromView: React.FC<FromViewProps> = ({ item }) => {
                     label="Category"
                     {...field(model.category)}
                     dataProvider={categoryDataProvider}
-                    itemLabelPath="categoryName"
+                    itemLabelPath="name"
                     itemValuePath="id"
                   />
                   <ComboBox
@@ -114,10 +114,10 @@ const FromView: React.FC<FromViewProps> = ({ item }) => {
                   />
                 </FromColumn>
                 <FromColumn>
-                  <NumberField label="Vat" {...field(model.vat)} />
-                  <NumberField label="Service Charge" {...field(model.serviceCharge)} />
-                  <NumberField label="Supplementary Duty" {...field(model.supplementaryDuty)} />
-                  <NumberField label="Discount" {...field(model.discount)} />
+                  <NumberField label="Vat(%)" {...field(model.vat)} />
+                  <NumberField label="Service Charge(%)" {...field(model.serviceCharge)} />
+                  <NumberField label="Supplementary Duty(%)" {...field(model.supplementaryDuty)} />
+                  <NumberField label="Discount(%)" {...field(model.discount)} />
                 </FromColumn>
                 <FromColumn>
                   <SwitchRC
