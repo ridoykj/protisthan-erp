@@ -87,14 +87,14 @@ const ItemsView = () => {
                 label="Category"
                 {...field(model.category)}
                 dataProvider={categoryDataProvider}
-                itemLabelPath="id"
+                itemLabelPath="name"
                 itemValuePath="id"
               />
               <ComboBox
                 label="Group"
                 {...field(model.itemGroup)}
                 dataProvider={itemGroupDataProvider}
-                itemLabelPath="id"
+                itemLabelPath="name"
                 itemValuePath="id"
               />
               <ComboBox
@@ -142,19 +142,14 @@ const ItemsView = () => {
             model={ItemDtoModel}
             className="h-full w-full overflow-auto bg-white/40"
             selectedItems={selectedItems.value}
-            visibleColumns={[
-              'id',
-              'name',
-              'code',
-              'saleUom.id',
-              'unitPrice',
-              'category.categoryName',
-              'itemGroup.name',
-            ]}
+            visibleColumns={['name', 'code', 'saleUom.id', 'unitPrice', 'category.name', 'itemGroup.name']}
             columnOptions={{
               name: {
                 header: 'Name',
                 renderer: ItemRender,
+              },
+              'saleUom.id': {
+                header: 'UOM',
               },
             }}
             onActiveItemChanged={(e) => {
@@ -214,7 +209,7 @@ const ItemsView = () => {
                 />
                 {/* <DetailField title="Stock" details={item.unitsInStock?.toString() ?? ''} icon={<FaCalendarDays />} /> */}
                 <DetailField title="Code" details={item.code ?? ''} icon={<FaCodeCompare />} />
-                <DetailField title="Category" details={item.category?.categoryName ?? ''} icon={<FaRegSnowflake />} />
+                <DetailField title="Category" details={item.category?.name ?? ''} icon={<FaRegSnowflake />} />
               </div>
             </div>
           </TabPanel>
@@ -237,31 +232,15 @@ const ItemsView = () => {
             <div className="flex flex-col gap-2 divide-y flex-grow ">
               <div className="flex flex-col py-4">
                 <span className="font-semibold text-lg">Personal Information</span>
-                <DetailField
-                  title="Disabled"
-                  details={item.isDisabled ? 'Yes' : 'No' ?? ''}
-                  icon={<FaEyeLowVision />}
-                />
-                <DetailField
-                  title="Fixed Asset"
-                  details={item.isFixedAsset ? 'Yes' : 'No' ?? ''}
-                  icon={<FaEyeLowVision />}
-                />
+                <DetailField title="Disabled" details={item.isDisabled ? 'Yes' : 'No'} icon={<FaEyeLowVision />} />
+                <DetailField title="Fixed Asset" details={item.isFixedAsset ? 'Yes' : 'No'} icon={<FaEyeLowVision />} />
                 <DetailField
                   title="Purchase Item"
-                  details={item.isPurchaseItem ? 'Yes' : 'No' ?? ''}
+                  details={item.isPurchaseItem ? 'Yes' : 'No'}
                   icon={<FaEyeLowVision />}
                 />
-                <DetailField
-                  title="Sales Item"
-                  details={item.isSalesItem ? 'Yes' : 'No' ?? ''}
-                  icon={<FaEyeLowVision />}
-                />
-                <DetailField
-                  title="Stock Item"
-                  details={item.isStockItem ? 'Yes' : 'No' ?? ''}
-                  icon={<FaEyeLowVision />}
-                />
+                <DetailField title="Sales Item" details={item.isSalesItem ? 'Yes' : 'No'} icon={<FaEyeLowVision />} />
+                <DetailField title="Stock Item" details={item.isStockItem ? 'Yes' : 'No'} icon={<FaEyeLowVision />} />
               </div>
             </div>
           </TabPanel>
@@ -299,7 +278,7 @@ const ItemsView = () => {
           </ButtonRC>
           <ButtonRC
             title="Delete"
-            onClick={() => {}}
+            onClick={() => { }}
             className="bg-red-100 hover:bg-red-200 text-red-400 hover:text-red-500"
           >
             <FaTrash />
