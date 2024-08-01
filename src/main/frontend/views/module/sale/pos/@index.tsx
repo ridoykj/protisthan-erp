@@ -1,24 +1,31 @@
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
-import { AutoGrid, AutoGridRef } from '@vaadin/hilla-react-crud';
 import { useComputed, useSignal } from '@vaadin/hilla-react-signals';
-import { Button, ComboBox, DatePicker, Grid, GridColumn, NumberField } from '@vaadin/react-components';
+import {
+  Button,
+  ComboBox,
+  ComboBoxElement,
+  DatePicker,
+  NumberField,
+  NumberFieldElement,
+} from '@vaadin/react-components';
 import ButtonRC from 'Frontend/components/button/regular/ButtonRC';
-import ItemDto from 'Frontend/generated/com/itbd/protisthan/db/dto/ItemDto';
-import OrderDetailDtoModel from 'Frontend/generated/com/itbd/protisthan/db/dto/OrderDetailDtoModel';
+import ItemDtoModel from 'Frontend/generated/com/itbd/protisthan/db/dto/ItemDtoModel';
 import OrderDto from 'Frontend/generated/com/itbd/protisthan/db/dto/OrderDto';
 import AndFilter from 'Frontend/generated/com/vaadin/hilla/crud/filter/AndFilter';
 import PropertyStringFilter from 'Frontend/generated/com/vaadin/hilla/crud/filter/PropertyStringFilter';
 import Matcher from 'Frontend/generated/com/vaadin/hilla/crud/filter/PropertyStringFilter/Matcher';
-import { OrderDetailDtoCrudService } from 'Frontend/generated/endpoints';
 import {
   CustomerDataProvider,
   EmployeeDataProvider,
   ItemDataProvider,
   ModeOfPaymentDataProvider,
 } from 'Frontend/utils/combobox/ComboboxDataProvider';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { FaCartShopping, FaPlus, FaTrash, FaUser } from 'react-icons/fa6';
-import { Tooltip as ReactTooltip } from 'react-tooltip';
+import CostNodeRC from './_CostNode';
+import { ItemCart } from './_ItemCartRC';
+import ItemGridRC from './_ItemGrid';
+import SellStateRC from './_SellState';
 
 const config: ViewConfig = {
   menu: {
@@ -32,12 +39,24 @@ const PosView: React.FC = () => {
   const customerDataProvider = useMemo(() => CustomerDataProvider, []);
   const employeeDataProvider = useMemo(() => EmployeeDataProvider, []);
   const modeOfPaymentDataProvider = useMemo(() => ModeOfPaymentDataProvider, []);
-  const autoGridRef = React.useRef<AutoGridRef>(null);
-  const selectedItems = useSignal<ItemDto[]>([]);
 
-  const itemSelect = useSignal<number>(0);
-  const addToCart = useSignal<ItemDto[]>([]);
+  const itemSelect = useSignal({
+    item: {} as ItemDtoModel,
+    qty: 0,
+  });
+
+  const itemSelected = useSignal<ItemDtoModel>({} as ItemDtoModel);
+  const itemQty = useSignal<number>(0);
+
+  const addToCart = useSignal<ItemCart[]>([]);
   const orderInfo = useSignal<OrderDto>({} as OrderDto);
+
+  const itemSelectRef = useRef<ComboBoxElement>(null);
+  const itemQtyRef = useRef<NumberFieldElement>(null);
+
+  useEffect(() => {
+    itemSelectRef.current?.focus();
+  }, []);
 
   const nameFilterValue = useSignal('');
   const filter = useComputed(() => {
@@ -48,7 +67,6 @@ const PosView: React.FC = () => {
       '@type': 'propertyString',
     };
 
-    console.log('hello jhdgd');
     const andFilter: AndFilter = {
       '@type': 'and',
       children: [categoryFilter],
@@ -57,44 +75,57 @@ const PosView: React.FC = () => {
     return andFilter;
   });
 
-  const CostNode = ({
-    lable,
-    value,
-    hints,
-    className,
-  }: {
-    lable: string;
-    value: string;
-    hints?: string;
-    className?: string;
-  }) => {
+  const itemRenderer = (item: ItemDtoModel) => {
+    const { name, code, salePrice, saleUom } = item;
     return (
-      <div className={`${className} w-full rounded-lg place-content-center text-center font-bold`}>
-        <h1 className="text-white " data-tooltip-id={`pos_${lable}`}>
-          {lable}
-        </h1>
-        <h1 className="text-white ">{value}</h1>
-        {hints && <ReactTooltip id={`pos_${lable}`} place="top" content={hints} />}
+      <div className="flex flex-row items-center gap-2">
+        <img
+          src={`images/profile/${name !== undefined ? 'profile.jpg' : 'default_profile.png'}`}
+          className="w-8 h-8 rounded-full"
+          alt="not_found"
+        />
+        <div className="flex flex-col">
+          <span className="font-medium">{`${item.name}`}</span>
+          <span className="font-extralight text-sm text-gray-500">{`Code: ${code} | Price: ${salePrice}(${item.saleUom?.id})`}</span>
+        </div>
       </div>
     );
   };
 
-  const ProductGrid = () => {
-    return (
-      <Grid
-        className="h-full w-full overflow-auto bg-white/40"
-        items={addToCart.value}
-        selectedItems={selectedItems.value}
-        onActiveItemChanged={(e) => {
-          const item = e.detail.value;
-          selectedItems.value = item ? [item] : [];
-        }}
-      >
-        <GridColumn path="id" />
-        <GridColumn path="name" />
-      </Grid>
-    );
-  };
+  function itemAdd() {
+    // const { item, qty } = itemSelect.value;
+    const item = itemSelected.value;
+    if (item.id === undefined) itemSelectRef.current?.focus();
+    if (itemQty.value === 0 || item.id === undefined) return;
+    const itemCart: ItemCart = {
+      ...item,
+      uom: `(${item?.saleUom?.id})` || '',
+      quantity: itemQty.value,
+    } as unknown as ItemCart;
+
+    const itemExists = addToCart.value.some((itemE) => itemE.id === itemCart.id);
+    if (itemExists) {
+      addToCart.value = addToCart.value.map((itemE) =>
+        itemE.id === itemCart.id
+          ? {
+              ...itemE,
+              quantity: itemQty.value,
+            }
+          : itemE
+      );
+      console.log('Updated item quantity in cart', addToCart.value);
+    } else {
+      addToCart.value = [
+        ...addToCart.value,
+        {
+          ...itemCart,
+        },
+      ];
+      console.log('Added new item to cart', addToCart.value);
+    }
+    itemSelected.value = {} as ItemDtoModel;
+    itemQty.value = 0;
+  }
 
   return (
     <div className="flex flex-row h-full w-full">
@@ -102,96 +133,72 @@ const PosView: React.FC = () => {
         <header className="flex flex-col xl:flex-row items-baseline gap-1 w-full border rounded-xl p-1">
           <div className="flex flex-col xl:flex-row w-full md:grow gap-2">
             <ComboBox
-              label="Product"
+              ref={itemSelectRef}
+              label="Item"
               className="md:grow"
-              placeholder='Search "Product"'
-              // {...field(model.item)}
+              placeholder='Search Item by "Name/#Code"'
+              clearButtonVisible
               dataProvider={itemDataProvider}
               itemLabelPath="name"
-              itemValuePath="id"
-              onValueChanged={(e) => {
+              // itemValuePath="name"
+              selectedItem={itemSelected.value && itemSelected.value.id ? itemSelected.value : undefined}
+              renderer={({ item }) => itemRenderer(item)}
+              onSelectedItemChanged={(e) => {
                 const item = e.detail.value;
-                itemSelect.value = parseInt(item, 10);
+                itemSelected.value = item || ({} as ItemDtoModel);
+                console.log('item', item);
+                itemQtyRef.current?.focus();
               }}
             />
-            <NumberField label="Quantity" stepButtonsVisible min={0} />
+            <NumberField
+              ref={itemQtyRef}
+              label="Quantity"
+              stepButtonsVisible
+              min={0}
+              defaultValue={0}
+              value={String(itemQty.value)}
+              onValueChanged={(e) => {
+                itemQty.value = Number(e.detail.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') itemAdd();
+              }}
+            />
           </div>
           <div className="flex flex-row gap-2 ">
             <ButtonRC
-              title="Add Cart"
+              title="Cart"
               onClick={() => {
-                OrderDetailDtoCrudService.save({
-                  idItemKey: { id: itemSelect.value },
-                  quantity: 1,
-                });
+                itemAdd();
               }}
             >
               <FaPlus />
             </ButtonRC>
             <Button
-              className="bg-red-400 text-white hover:bg-red-600"
+              className="bg-red-400 text-white hover:bg-red-600 "
               onClick={() => {
-                // cartItem.value = [];
+                addToCart.value = [];
               }}
             >
-              <div className="inline-flex gap-3">
+              <span className="inline-flex gap-2">
                 <FaTrash />
-                <span>Remove All</span>
-              </div>
+                Remove All
+              </span>
             </Button>
           </div>
         </header>
         <main className="flex grow border rounded-xl w-full">
-          {/* <ProductGrid /> */}
-          <AutoGrid
-            className="h-full w-full overflow-auto bg-white/40"
-            service={OrderDetailDtoCrudService}
-            model={OrderDetailDtoModel}
-            // experimentalFilter={filter.value}
-            noHeaderFilters
-          />
-          {/* <Grid
-            className="h-full w-full overflow-auto bg-white/40"
-            items={cartItem.value}
-            // selectedItems={selectedItems.value}
-            onActiveItemChanged={(e) => {
-              const item = e.detail.value;
-              selectedItems.value = item ? [item] : [];
-            }}
-          >
-            <GridColumn path="id" />
-            <GridColumn path="name" />
-          </Grid> */}
-          {/* <div className="h-full w-full overflow-auto bg-white/40">
-            {cartItem.value.map((item) => {
-              return (
-                <div key={item.id}>
-                  <div className="flex flex-row items-center gap-2">
-                    <span>{item.name}</span>
-                    <span>{item.id}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div> */}
+          <ItemGridRC addToCart={addToCart} itemSelected={itemSelected} itemQty={itemQty} />
         </main>
-        <footer className="flex gap-3 h-14 items-stretch border rounded-xl p-1">
-          <CostNode className="bg-green-600" lable="Total Item" value="0.0" />
-          <CostNode className="bg-green-600" lable="Total Qty" value="0.0" />
-          <CostNode className="bg-green-600" lable="Amount" value="0.0" />
-          <CostNode className="bg-green-600" lable="SD." value="0.0" hints="Supplementary duty" />
-          <CostNode className="bg-green-600" lable="SC." value="0.0" hints="Service Charge" />
-          <CostNode className="bg-green-600" lable="Discount" value="0.0" />
-          <CostNode className="bg-green-600" lable="VAT" value="0.0" />
-          <CostNode className="bg-green-600" lable="Net Amount" value="0.0" />
-          <CostNode className="bg-green-600" lable="Exchange" value="0.0" />
+        <footer className="flex sm:gap-1 md:gap-3 h-14 items-stretch border rounded-xl m-1">
+          <SellStateRC addToCart={addToCart} />
         </footer>
       </section>
       <aside className="flex flex-col z-30 overflow-hidden shadow-2xl duration-300 fixed md:relative w-full h-full md:max-w-96 p-2 bg-gray-50">
         <section className="flex flex-col w-full h-full overflow-y-auto gap-2 md:w-96">
           <header className="flex flex-col border gap-2 p-2 rounded-xl sticky top-0 bg-gray-50">
-            <CostNode className="bg-indigo-600 p-2 text-2xl" lable="Total Cost" value="0.0" />
-            <CostNode className="bg-indigo-600 p-1" lable="Last Purchase" value="0.0" />
+            <CostNodeRC className="bg-indigo-600 p-2 text-2xl" lable="Total Cost" value="0.0" />
+            <CostNodeRC className="bg-indigo-600 p-1" lable="Last Purchase" value="0.0" />
           </header>
           <main className="h-full w-full flex flex-col gap-2">
             <div className="flex flex-col border gap-2 p-2 rounded-xl">
