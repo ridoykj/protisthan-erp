@@ -1,5 +1,6 @@
 package com.itbd.protisthan.db.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.itbd.protisthan.db.dao.CategoryDao;
 import com.itbd.protisthan.db.dao.ItemDao;
 import com.itbd.protisthan.db.dao.ItemGroupDao;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 /**
  * DTO for {@link ItemDao}
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record ItemDto(
         Long id,
         @NotNull @Size(max = 40) String name,

@@ -1,25 +1,36 @@
 package com.itbd.protisthan.db.dao;
 
+import com.itbd.protisthan.config.db.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "items", schema = "erp_over", indexes = {
+@Table(name = "ITEMS", schema = "erp_over", indexes = {
         @Index(name = "id_category_key", columnList = "id_category_key")
 })
-public class ItemDao {
+@AuditTable(value = "ITEMS_AUDIT")
+//@Audited(targetAuditMode = NOT_AUDITED)
+@Audited
+public class ItemDao extends AbstractEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_item_key", nullable = false)
     private Long id;
+
+    @Column(name = "id_item_ver", nullable = false)
+    @Version
+    private Integer recordVersion;
 
     @Size(max = 40)
     @NotNull
@@ -105,15 +116,43 @@ public class ItemDao {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_category_key", nullable = false)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private CategoryDao category;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_item_group_key", nullable = false)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private ItemGroupDao itemGroup;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "tx_uom_key", nullable = false)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private UomDao saleUom;
+
+    @PrePersist
+    public void prePersist() {
+        // init predefined field default value
+        if (environmentKey == null) environmentKey = -2147483648L;
+        if (eventKey == null) eventKey = -2147483648L;
+        if (stateKey == null) stateKey = -2147483648L;
+        if (actionKey == null) actionKey = -2147483648L;
+        if (recordComment == null) recordComment = "?";
+
+        // Table Field default value
+        if (unitPrice == null) unitPrice = BigDecimal.ZERO;
+        if (discount == null) discount = BigDecimal.ZERO;
+        if (valuationRate == null) valuationRate = BigDecimal.ZERO;
+        if (serviceCharge == null) serviceCharge = BigDecimal.ZERO;
+        if (supplementaryDuty == null) supplementaryDuty = BigDecimal.ZERO;
+        if (vat == null) vat = BigDecimal.ZERO;
+
+        if (isDiscontinued == null) isDiscontinued = false;
+        if (isDisabled == null) isDisabled = false;
+        if (isFixedAsset == null) isFixedAsset = false;
+        if (isPurchaseItem == null) isPurchaseItem = false;
+        if (isSalesItem == null) isSalesItem = false;
+        if (isStockItem == null) isStockItem = false;
+    }
 }
