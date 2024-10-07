@@ -1,7 +1,7 @@
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
 import { useForm } from '@vaadin/hilla-react-form';
 import { useSignal } from '@vaadin/hilla-react-signals';
-import { ComboBox, NumberField, TextField, Upload } from '@vaadin/react-components';
+import { ComboBox, NumberField, TextField, Upload, UploadSuccessEvent } from '@vaadin/react-components';
 import ButtonRC from 'Frontend/components/button/regular/ButtonRC';
 import SwitchRC from 'Frontend/components/button/regular/SwitchRC';
 import FromLayoutRC, { FromColumn, FromRow } from 'Frontend/components/from/from_layout/FromLayoutRC';
@@ -17,7 +17,7 @@ import {
   ItemGroupDataProvider,
   UomDataProvider,
 } from 'Frontend/utils/combobox/ComboboxDataProvider';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { FaSave } from 'react-icons/fa';
 import { FaClockRotateLeft } from 'react-icons/fa6';
 import { useParams } from 'react-router-dom';
@@ -55,6 +55,7 @@ type FromViewProps = {
 };
 
 const FromView: React.FC<FromViewProps> = ({ item }) => {
+  const formImage = useSignal<string>('');
   const itemGroupDataProvider = useMemo(() => ItemGroupDataProvider, []);
   const uomDataProvider = useMemo(() => UomDataProvider, []);
   const categoryDataProvider = useMemo(() => CategoryDataProvider, []);
@@ -65,8 +66,13 @@ const FromView: React.FC<FromViewProps> = ({ item }) => {
   });
 
   useEffect(() => {
-    read(item);
+    if (item) read(item);
   }, [item]);
+
+  useEffect(() => {
+    if (value.id)
+      formImage.value = `v1/content/image?imagePath=${btoa(`/org/inventory/items/${value.id}/temp/200/${value.id}.png`)}`;
+  }, [value.id]);
 
   return (
     <>
@@ -162,14 +168,36 @@ const FromView: React.FC<FromViewProps> = ({ item }) => {
                   />
                   <div className="text-blue-500 inline-flex items-center gap-2 border-b p-2">
                     <img
-                      src={`images/profile/${'default_profile.png'}`}
-                      className="size-28 rounded-full ring"
+                      src={formImage.value}
+                      onError={(e: any) => {
+                        e.target.src = `images/profile/default_profile.png`;
+                      }}
+                      className="size-28 rounded-full ring object-cover"
                       alt="not_found"
                     />
                     <Upload
-                      method="PUT"
-                      target="/api/upload-handler"
-                      headers='{ "X-API-KEY": "7f4306cb-bb25-4064-9475-1254c4eff6e5" }'
+                      capture="camera"
+                      method="POST"
+                      target="v1/content/upload/image"
+                      headers={`{"path": "/org/inventory/items/${value.id || ''}", "filename": "${value.id || ''}.png" }`}
+                      // onUploadBefore={async (e: UploadBeforeEvent) => {
+                      //     const file = e.detail.file;
+                      //     // e.preventDefault();
+                      //     console.log('file', file);
+                      //     // if (form.value) {
+                      //     //   form.value.avatarBase64 = await readAsDataURL(file);
+                      //     // }
+                      // }}
+                      onUploadBefore={(e) => {
+                        console.log('before', e);
+                        formImage.value = '';
+                        // refreshGrid();
+                      }}
+                      onUploadSuccess={(e: UploadSuccessEvent) => {
+                        const { file } = e.detail;
+                        console.log('file s', file);
+                        formImage.value = `v1/content/image?imagePath=${btoa(`/org/inventory/items/${value.id}/temp/200/${value.id}.png`)}&mdt=${new Date().getTime().toFixed(0)}`;
+                      }}
                     />
                   </div>
                 </FromColumn>

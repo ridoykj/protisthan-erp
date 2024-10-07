@@ -1,7 +1,15 @@
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
 import { useForm } from '@vaadin/hilla-react-form';
 import { useSignal } from '@vaadin/hilla-react-signals';
-import { ComboBox, DatePicker, IntegerField, Select, TextField, Upload } from '@vaadin/react-components';
+import {
+  ComboBox,
+  DatePicker,
+  IntegerField,
+  Select,
+  TextField,
+  Upload,
+  UploadSuccessEvent,
+} from '@vaadin/react-components';
 import ButtonRC from 'Frontend/components/button/regular/ButtonRC';
 import FromLayoutRC, { FromColumn, FromRow } from 'Frontend/components/from/from_layout/FromLayoutRC';
 import BloodGroupEnum from 'Frontend/generated/com/itbd/protisthan/constant/enums/BloodGroupEnum';
@@ -50,7 +58,8 @@ type FromViewProps = {
 };
 
 const FromView: React.FC<FromViewProps> = ({ item }) => {
-  const { field, model, read, submit, reset } = useForm(CustomerDtoModel, {
+  const formImage = useSignal<string>('');
+  const { value, field, model, read, submit, reset } = useForm(CustomerDtoModel, {
     onSubmit: async (values) => {
       console.log('values', values);
       // const genderId: string = values.gender;
@@ -65,6 +74,11 @@ const FromView: React.FC<FromViewProps> = ({ item }) => {
     console.log('editItem.value', item);
     read(item);
   }, [item]);
+
+  useEffect(() => {
+    if (value.id)
+      formImage.value = `v1/content/image?imagePath=${btoa(`/org/user/customer/${value.id}/temp/200/${value.id}.png`)}`;
+  }, [value.id]);
 
   const genderDataProvider = useMemo(() => GenderDataProvider, []);
   const countryDataProvider = useMemo(() => CountryDataProvider, []);
@@ -91,14 +105,36 @@ const FromView: React.FC<FromViewProps> = ({ item }) => {
                 <FromColumn header="Upload">
                   <div className="text-blue-500 inline-flex items-center gap-2 border-b p-2">
                     <img
-                      src={`images/profile/${'default_profile.png'}`}
-                      className="size-28 rounded-full ring"
+                      src={formImage.value}
+                      onError={(e: any) => {
+                        e.target.src = `images/profile/default_profile.png`;
+                      }}
+                      className="size-28 rounded-full ring object-cover"
                       alt="not_found"
                     />
                     <Upload
-                      method="PUT"
-                      target="/api/upload-handler"
-                      headers='{ "X-API-KEY": "7f4306cb-bb25-4064-9475-1254c4eff6e5" }'
+                      capture="camera"
+                      method="POST"
+                      target="v1/content/upload/image"
+                      headers={`{"path": "/org/user/customer/${value.id || ''}", "filename": "${value.id || ''}.png" }`}
+                      // onUploadBefore={async (e: UploadBeforeEvent) => {
+                      //     const file = e.detail.file;
+                      //     // e.preventDefault();
+                      //     console.log('file', file);
+                      //     // if (form.value) {
+                      //     //   form.value.avatarBase64 = await readAsDataURL(file);
+                      //     // }
+                      // }}
+                      onUploadBefore={(e) => {
+                        console.log('before', e);
+                        formImage.value = '';
+                        // refreshGrid();
+                      }}
+                      onUploadSuccess={(e: UploadSuccessEvent) => {
+                        const { file } = e.detail;
+                        console.log('file s', file);
+                        formImage.value = `v1/content/image?imagePath=${btoa(`/org/user/customer/${value.id}/temp/200/${value.id}.png`)}&mdt=${new Date().getTime().toFixed(0)}`;
+                      }}
                     />
                   </div>
                 </FromColumn>

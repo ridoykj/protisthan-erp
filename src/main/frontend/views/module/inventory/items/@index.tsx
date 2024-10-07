@@ -115,7 +115,14 @@ const ItemsView = () => {
     const { id, name } = item;
     return (
       <div className="text-blue-500 inline-flex items-center gap-2">
-        <FaRaspberryPi className="text-gray-600 size-8 ring-2 ring-gray-300 p-1 rounded-full" />
+        <img
+          src={`v1/content/image?imagePath=${btoa(`/org/inventory/items/${id}/temp/200/${id}.png`)}`}
+          onError={(e: any) => {
+            e.target.src = `images/profile/default_profile.png`;
+          }}
+          className="text-gray-600 size-8 ring-2 ring-gray-300 rounded-full object-cover"
+          alt="not_found"
+        />
         {name}
       </div>
     );
@@ -256,8 +263,11 @@ const ItemsView = () => {
         <header className="w-full">
           <div className="flex justify-center gap-4 px-4 py-2">
             <img
-              src={`images/profile/${'default_profile.png'}`}
-              className="size-28 rounded-full ring"
+              src={`v1/content/image?imagePath=${btoa(`/org/inventory/items/${item?.id}/temp/200/${item?.id}.png`)}`}
+              onError={(e: any) => {
+                e.target.src = `images/profile/default_profile.png`;
+              }}
+              className="size-36 rounded-full ring object-cover"
               alt="not_found"
             />
           </div>
@@ -278,7 +288,7 @@ const ItemsView = () => {
           </ButtonRC>
           <ButtonRC
             title="Delete"
-            onClick={() => { }}
+            onClick={() => {}}
             className="bg-red-100 hover:bg-red-200 text-red-400 hover:text-red-500"
           >
             <FaTrash />

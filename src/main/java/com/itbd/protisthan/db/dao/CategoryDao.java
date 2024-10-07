@@ -19,7 +19,7 @@ public class CategoryDao {
     @Size(max = 15)
     @NotNull
     @Column(name = "tx_category_name", nullable = false, length = 15)
-    private String categoryName;
+    private String name;
 
     @Lob
     @Column(name = "tx_picture")

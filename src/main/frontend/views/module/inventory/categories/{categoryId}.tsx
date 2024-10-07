@@ -92,7 +92,7 @@ const FromView: React.FC<FromViewProps> = ({ item }) => {
                   </div>
                 </FromColumn> */}
                 <FromColumn>
-                  <TextField label="Category Name" {...field(model.categoryName)} />
+                  <TextField label="Category Name" {...field(model.name)} />
                   <TextField label="Description" {...field(model.description)} />
                 </FromColumn>
                 {/* <FromColumn header="Contact Information">

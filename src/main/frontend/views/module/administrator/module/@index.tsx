@@ -165,7 +165,7 @@ const DocTypesView = () => {
               <div className="flex flex-col py-4">
                 <span className="font-semibold text-lg">Personal Information</span>
                 <DetailField title="Name" details={item.id ?? ''} icon={<FaAddressBook />} />
-                <DetailField title="Custom" details={item.isCustom ? 'Yes' : 'No' ?? ''} icon={<FaEyeLowVision />} />
+                <DetailField title="Custom" details={item.isCustom ? 'Yes' : ('No' ?? '')} icon={<FaEyeLowVision />} />
                 <DetailField title="documentation" details={item.documentation ?? ''} icon={<FaNoteSticky />} />
                 <DetailField title="Description" details={item.description ?? ''} icon={<FaNoteSticky />} />
               </div>
@@ -190,7 +190,7 @@ const DocTypesView = () => {
               alt="not_found"
             />
             <div className="flex flex-col grow items-left">
-              <span className="font-semibold text-lg">{`Name: ${item?.categoryName ?? ''}`}</span>
+              <span className="font-semibold text-lg">{`Name: ${item?.name ?? ''}`}</span>
               <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                 {`ID: ${item?.id ?? ''}`}
               </span>

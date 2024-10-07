@@ -41,6 +41,7 @@ import {
   UomDtoCrudService,
 } from 'Frontend/generated/endpoints';
 import Direction from 'Frontend/generated/org/springframework/data/domain/Sort/Direction';
+import EmployeeDtoModel from 'Frontend/generated/com/itbd/protisthan/db/dto/EmployeeDtoModel';
 import { comboBoxLazyFilter } from './comboboxLazyFilterUtil';
 
 export const GenderDataProvider = async (
@@ -317,7 +318,7 @@ export const CustomerDataProvider = async (
 
 export const EmployeeDataProvider = async (
   params: ComboBoxDataProviderParams,
-  callback: ComboBoxDataProviderCallback<CustomerDtoModel>
+  callback: ComboBoxDataProviderCallback<EmployeeDtoModel>
 ) => {
   const child: PropertyStringFilter[] = [
     {
@@ -357,15 +358,25 @@ export const ItemDataProvider = async (
   params: ComboBoxDataProviderParams,
   callback: ComboBoxDataProviderCallback<ItemDtoModel>
 ) => {
+  const { filter, page, pageSize } = params;
   const child: PropertyStringFilter[] = [
     {
       '@type': 'propertyString',
-      propertyId: 'name',
-      filterValue: params.filter,
+      propertyId: filter.startsWith('#') ? 'code' : 'name',
+      filterValue: filter.startsWith('#') ? filter.substring(1, filter.length) : filter,
       matcher: Matcher.CONTAINS,
     },
   ];
-  const { pagination, filters } = comboBoxLazyFilter(params, 'and', child);
+
+  const pagination: Pageable = {
+    pageNumber: page,
+    pageSize,
+    sort: {
+      orders: [{ direction: Direction.ASC, property: 'name', ignoreCase: true }],
+    },
+  };
+
+  const { filters } = comboBoxLazyFilter(params, 'and', child);
 
   return ItemDtoCrudService.list(pagination, filters).then((result: any) => {
     callback(result, result.length);

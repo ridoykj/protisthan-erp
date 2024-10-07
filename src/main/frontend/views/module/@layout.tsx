@@ -24,7 +24,6 @@ effect(() => {
 });
 
 const MainLayout = () => {
-  console.log('rendering app main layout');
   const currentTitle = useViewConfig()?.title ?? '';
   const navigate = useNavigate();
   const location = useLocation();

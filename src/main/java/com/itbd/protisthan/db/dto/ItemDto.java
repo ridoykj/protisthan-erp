@@ -5,6 +5,8 @@ import com.itbd.protisthan.db.dao.CategoryDao;
 import com.itbd.protisthan.db.dao.ItemDao;
 import com.itbd.protisthan.db.dao.ItemGroupDao;
 import com.itbd.protisthan.db.dao.UomDao;
+import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -16,7 +18,8 @@ import java.math.BigDecimal;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ItemDto(
-        Long id,
+        @Id Long id,
+        @Version Integer recordVersion,
         @NotNull @Size(max = 40) String name,
         @Size(max = 20) String quantityPerUnit,
         @NotNull BigDecimal unitPrice,
@@ -47,6 +50,7 @@ public record ItemDto(
         itemGroup.setParentItemGroup(null);
         return new ItemDto(
                 dao.getId(),
+                dao.getRecordVersion(),
                 dao.getName(),
                 dao.getQuantityPerUnit(),
                 dao.getUnitPrice(),

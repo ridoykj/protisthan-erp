@@ -1,14 +1,13 @@
 package com.itbd.protisthan.db.dto;
 
-import com.itbd.protisthan.db.dao.CustomerDao;
-import com.itbd.protisthan.db.dao.EmployeeDao;
-import com.itbd.protisthan.db.dao.ModeOfPaymentDao;
-import com.itbd.protisthan.db.dao.OrderDao;
+import com.itbd.protisthan.db.dao.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * DTO for {@link OrderDao}
@@ -21,7 +20,8 @@ public record OrderDto(
         Double freight,
         @NotNull CustomerDao customer,
         @NotNull EmployeeDao employee,
-        @NotNull ModeOfPaymentDao modeOfPayment
+        @NotNull ModeOfPaymentDao modeOfPayment,
+        Set<OrderDetailDao> orderDetails
 ) implements Serializable {
 
     public static OrderDto toDto(OrderDao dao) {
@@ -33,12 +33,13 @@ public record OrderDto(
                 dao.getFreight(),
                 dao.getCustomer(),
                 dao.getEmployee(),
-                dao.getModeOfPayment()
+                dao.getModeOfPayment(),
+                dao.getOrderDetails()
         );
     }
 
     public static void toEntity(OrderDto dto, OrderDao dao) {
-        dao.setId(dto.id());
+//        dao.setId(dto.id());
         dao.setOrderDate(dto.orderDate());
         dao.setRequiredDate(dto.requiredDate());
         dao.setShippedDate(dto.shippedDate());

@@ -5,7 +5,6 @@ import { treeBuilder, TreeNode } from 'Frontend/utils/NavTree';
 import { memo } from 'react';
 
 const AppNavItem = ({ className }: { className?: string }) => {
-  console.log('rendering app main');
   const renderNavItem = (item: TreeNode) => {
     return (
       <NavItemRC
@@ -15,7 +14,6 @@ const AppNavItem = ({ className }: { className?: string }) => {
         route={item.route}
         isChildren={item.children.length > 0}
       >
-        {' '}
         {item.children.map(renderNavItem)}
       </NavItemRC>
     );
@@ -39,10 +37,12 @@ const AppNavItem = ({ className }: { className?: string }) => {
       <div className="flex flex-row h-16 items-center justify-center">
         <img src="images/eco-factory.png" alt="" className="w-20 p-4" />
         <span
-          className="text-4xl text-center font-kalpurush text-indigo-700 font-bold drop-shadow-[0_10px_10px_rgba(255, 255, 255, 0.8)]"
+          // className="text-4xl text-center font-kalpurush text-indigo-700 font-bold drop-shadow-[0_10px_10px_rgba(255, 255, 255, 0.8)]"
+          className="text-4xl text-center text-indigo-700 font-bold drop-shadow-[0_10px_10px_rgba(255, 255, 255, 0.8)]"
           lang="bn-BD"
         >
-          প্রতিষ্ঠান
+          {/* প্রতিষ্ঠান */}
+          U-ERP
         </span>
       </div>
       <div className="overflow-y-auto scroll-smooth flex-grow border-y">

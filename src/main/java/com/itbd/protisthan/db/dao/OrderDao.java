@@ -1,11 +1,11 @@
 package com.itbd.protisthan.db.dao;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,7 +19,6 @@ public class OrderDao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order_key", nullable = false)
     private Long id;
-
 
     @Column(name = "dt_order_date")
     private LocalDate orderDate;
@@ -44,4 +43,7 @@ public class OrderDao {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_mode_of_payment_key")
     private ModeOfPaymentDao modeOfPayment;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderDetailDao> orderDetails;
 }

@@ -1,7 +1,10 @@
 package com.itbd.protisthan.services.sale;
 
+import com.itbd.protisthan.db.dao.ItemDao;
 import com.itbd.protisthan.db.dao.OrderDao;
+import com.itbd.protisthan.db.dao.OrderDetailDao;
 import com.itbd.protisthan.db.dto.OrderDto;
+import com.itbd.protisthan.db.repos.ItemRepository;
 import com.itbd.protisthan.db.repos.OrderRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.hilla.BrowserCallable;
@@ -16,15 +19,19 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @BrowserCallable
 @AnonymousAllowed
 public class OrderDtoCrudService implements CrudService<OrderDto, Long> {
     private final JpaFilterConverter jpaFilterConverter;
     private final OrderRepository orderRepo;
+    private final ItemRepository itemRepo;
 
-    public OrderDtoCrudService(OrderRepository orderRepo, JpaFilterConverter jpaFilterConverter) {
+    public OrderDtoCrudService(OrderRepository orderRepo, ItemRepository itemRepo, JpaFilterConverter jpaFilterConverter) {
         this.orderRepo = orderRepo;
+        this.itemRepo = itemRepo;
         this.jpaFilterConverter = jpaFilterConverter;
     }
 
@@ -44,15 +51,20 @@ public class OrderDtoCrudService implements CrudService<OrderDto, Long> {
     @Override
     @Transactional
     public @Nullable OrderDto save(OrderDto value) {
-        OrderDao accountDao = value.id() != null && value.id() > 0
+        OrderDao order = value.id() != null && value.id() > 0
                 ? orderRepo.getReferenceById(value.id())
                 : new OrderDao();
-//        accountDao.setName(value.name());
-//        accountDao.setCategory(value.category());
-//        accountDao.setPrice(value.price());
 
-        OrderDto.toEntity(value, accountDao);
-        return OrderDto.toDto(orderRepo.save(accountDao));
+        OrderDto.toEntity(value, order);
+        final Set<OrderDetailDao> items = value.orderDetails().stream().map(e -> {
+            ItemDao item = itemRepo.getReferenceById(e.getId().getIdItemKey());
+            e.setOrder(order);
+            e.setItem(item);
+            return e;
+        }).collect(Collectors.toSet());
+        if (order.getOrderDetails() == null || order.getOrderDetails().isEmpty()) order.setOrderDetails(items);
+        else order.getOrderDetails().addAll(items);
+        return OrderDto.toDto(orderRepo.save(order));
     }
 
     @Override

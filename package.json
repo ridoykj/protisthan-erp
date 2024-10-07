@@ -30,10 +30,12 @@
     "date-fns": "2.29.3",
     "eslint-plugin-react-refresh": "^0.4.7",
     "lit": "3.1.4",
+    "no-name": "file:",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-icons": "^5.2.1",
     "react-router-dom": "6.23.1",
+    "react-toastify": "^10.0.5",
     "react-tooltip": "^5.27.0"
   },
   "devDependencies": {
@@ -122,7 +124,8 @@
     "date-fns": "$date-fns",
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
-    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles"
+    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
+    "react-toastify": "$react-toastify"
   },
   "vaadin": {
     "dependencies": {
@@ -181,6 +184,6 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "99ec33ff79c00843eaa789b1a4a2da0c3638fd754b257aaf897ed55946c41176"
+    "hash": "d6edf6679b8e1edb78712a05ff7e7cd34f41a4b053f69a1e00a71325eb425373"
   }
 }

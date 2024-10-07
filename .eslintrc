@@ -4,17 +4,17 @@
     "airbnb/hooks",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 12,
+    "ecmaVersion": 12
   },
   "env": {
     "browser": true,
     "node": true,
     "es6": true,
-    "jest": true,
+    "jest": true
   },
   "rules": {
     "import/no-unresolved": "off",
@@ -22,8 +22,18 @@
     "react/require-default-props": "off",
     "dot-notation": "off",
     "react-hooks/exhaustive-deps": "warn",
-    "react/function-component-definition":[2, { "namedComponents": "arrow-function"}],
-    "no-param-reassign": [2, { "props": false }],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function"
+      }
+    ],
+    "no-param-reassign": [
+      2,
+      {
+        "props": false
+      }
+    ],
     "@typescript-eslint/no-explicit-any": "off",
     "import/no-extraneous-dependencies": "off",
     "no-unused-vars": "off",
@@ -43,7 +53,9 @@
     "react/jsx-filename-extension": [
       "warn",
       {
-        "extensions": [".tsx"],
+        "extensions": [
+          ".tsx"
+        ],
       },
     ],
     "prettier/prettier": [
@@ -56,9 +68,15 @@
         "semi": true,
         "endOfLine": "auto",
         "parser": "typescript",
+        "usePrettierrc": false,
       },
     ],
   },
-  "plugins": ["react", "react-hooks", "prettier", "@typescript-eslint"],
+  "plugins": [
+    "react",
+    "react-hooks",
+    "prettier",
+    "@typescript-eslint",
+  ],
   // "plugins": ["prettier", "react", "react-hooks", "@typescript-eslint"],
 }

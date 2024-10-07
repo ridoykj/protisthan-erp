@@ -41,7 +41,8 @@ const AppHeader = ({ openSideBar }: AppHeaderProps) => {
         {iconState ? <FaXmark /> : <FaBars />}
       </button>
       <div className="flex flex-row grow items-center">
-        <h1 className="text-white text-xl text-center">{currentTitle.replace(/s$/, '' || '') ?? 'hello'}</h1>
+        <h1 className="text-white text-xl text-center">{currentTitle ?? 'Protisthan-ERP'}</h1>
+        {/* <h1 className="text-white text-xl text-center">{currentTitle.replace(/s$/, '' || '') ?? 'hello'}</h1> */}
         <div className="grow">
           <AvatarControlRC />
         </div>

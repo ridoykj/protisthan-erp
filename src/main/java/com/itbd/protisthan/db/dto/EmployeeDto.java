@@ -14,7 +14,6 @@ import java.time.LocalDate;
 /**
  * DTO for {@link EmployeeDao}
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public record EmployeeDto(
         Long id,
         @NotNull @Size(max = 20) String employeeId,
@@ -71,18 +70,22 @@ public record EmployeeDto(
         LanguageDao language = dao.getLanguage();
         NameSeriesDao namingSeries = dao.getNamingSeries();
         DepartmentDao department = dao.getDepartment();
+        DesignationDao designation = dao.getDesignation();
 
         if (gender != null) gender.setIdx(gender.getIdx());
         if (country != null) country.setIdx(country.getIdx());
         if (language != null) language.setIdx(language.getIdx());
         if (namingSeries != null) namingSeries.setIdx(namingSeries.getIdx());
         if (department != null) department.setIdx(department.getIdx());
+        if (designation != null) designation.setIdx(designation.getIdx());
 
         dao.setGender(gender);
         dao.setCountry(country);
         dao.setLanguage(language);
         dao.setNamingSeries(namingSeries);
         dao.setDepartment(department);
+        dao.setDesignation(designation);
+
         return new EmployeeDto(
                 dao.getId(),
                 dao.getEmployeeId(),
@@ -137,7 +140,7 @@ public record EmployeeDto(
 
     public static void toEntity(EmployeeDto dto,
                                 EmployeeDao dao) {
-        dao.setFirstName(dto.employeeId());
+        dao.setEmployeeId(dto.employeeId());
         dao.setFirstName(dto.firstName());
         dao.setLastName(dto.lastName());
         dao.setTitle(dto.title());

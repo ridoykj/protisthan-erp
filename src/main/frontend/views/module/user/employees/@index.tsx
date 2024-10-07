@@ -131,8 +131,11 @@ const EmployeesView = () => {
     return (
       <div className="text-blue-500 inline-flex items-center gap-2">
         <img
-          src={`images/profile/${id !== undefined ? 'profile.jpg' : 'default_profile.png'}`}
-          className="w-8 h-8 rounded-full"
+          src={`v1/content/image?imagePath=${btoa(`/org/user/employee/${id}/temp/100/${id}.png`)}`}
+          onError={(e: any) => {
+            e.target.src = `images/profile/default_profile.png`;
+          }}
+          className="text-gray-600 size-8 ring-2 ring-gray-300 rounded-full object-cover"
           alt="not_found"
         />
         {`${firstName} ${lastName}`}
@@ -270,8 +273,11 @@ const EmployeesView = () => {
         <header className="w-full">
           <div className="flex justify-between gap-4 px-4 py-2">
             <img
-              src={`images/profile/${'default_profile.png'}`}
-              className="size-28 rounded-full ring"
+              src={`v1/content/image?imagePath=${btoa(`/org/user/employee/${item?.id}/temp/200/${item?.id}.png`)}`}
+              onError={(e: any) => {
+                e.target.src = `images/profile/default_profile.png`;
+              }}
+              className="size-28 rounded-full ring object-cover"
               alt="not_found"
             />
             <div className="flex flex-col grow items-left">

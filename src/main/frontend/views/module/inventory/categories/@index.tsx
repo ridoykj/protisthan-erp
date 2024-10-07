@@ -64,7 +64,7 @@ const CategoriesView = () => {
         <FromLayoutRC>
           <FromRow>
             <FromColumn>
-              <TextField label="Category Name" {...field(model.categoryName)} />
+              <TextField label="Category Name" {...field(model.name)} />
               <TextField label="Description" {...field(model.description)} />
             </FromColumn>
           </FromRow>
@@ -74,11 +74,11 @@ const CategoriesView = () => {
   };
 
   const ItemRender = ({ item }: { item: CategoryDto }) => {
-    const { id, categoryName } = item;
+    const { id, name } = item;
     return (
       <div className="text-blue-500 inline-flex items-center gap-2">
         <FaCube className="text-gray-600 size-8 ring-2 ring-gray-300 p-1 rounded-full" />
-        {categoryName}
+        {name}
       </div>
     );
   };
@@ -104,9 +104,9 @@ const CategoriesView = () => {
             model={CategoryDtoModel}
             className="h-full w-full overflow-auto bg-white/40"
             selectedItems={selectedItems.value}
-            visibleColumns={['categoryName', 'description']}
+            visibleColumns={['name', 'description']}
             columnOptions={{
-              categoryName: {
+              name: {
                 header: 'Category Name',
                 renderer: ItemRender,
               },
@@ -153,7 +153,7 @@ const CategoriesView = () => {
             <div className="flex flex-col gap-2 divide-y flex-grow ">
               <div className="flex flex-col py-4">
                 <span className="font-semibold text-lg">Personal Information</span>
-                <DetailField title="Category Name" details={item.categoryName ?? ''} icon={<FaAddressBook />} />
+                <DetailField title="Category Name" details={item.name ?? ''} icon={<FaAddressBook />} />
                 <DetailField title="Description" details={item.description ?? ''} icon={<FaNoteSticky />} />
               </div>
               {/* <div className="flex flex-col py-4">
@@ -182,11 +182,7 @@ const CategoriesView = () => {
   const ItemDetails = ({ employee }: { employee: Signal<CategoryDto[]> }) => {
     const item = employee.value[0];
     return (
-      <DetailSectionRC
-        headerTitle={item?.categoryName}
-        isSidebarVisible={isSidebarVisible}
-        className="w-full md:w-[40rem]"
-      >
+      <DetailSectionRC headerTitle={item?.name} isSidebarVisible={isSidebarVisible} className="w-full md:w-[40rem]">
         {/* <header className="w-full">
           <div className="flex justify-between gap-4 px-4 py-2">
             <img
@@ -195,7 +191,7 @@ const CategoriesView = () => {
               alt="not_found"
             />
             <div className="flex flex-col grow items-left">
-              <span className="font-semibold text-lg">{`Name: ${item?.categoryName ?? ''}`}</span>
+              <span className="font-semibold text-lg">{`Name: ${item?.name ?? ''}`}</span>
               <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                 {`ID: ${item?.id ?? ''}`}
               </span>
@@ -218,7 +214,7 @@ const CategoriesView = () => {
           </ButtonRC>
           <ButtonRC
             title="Delete"
-            onClick={() => {}}
+            onClick={() => { }}
             className="bg-red-100 hover:bg-red-200 text-red-400 hover:text-red-500"
           >
             <FaTrash />

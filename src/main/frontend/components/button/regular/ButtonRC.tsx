@@ -1,4 +1,5 @@
 import RippleDivRC from 'Frontend/components/effects/ripple/div/RippleDivRC';
+import { forwardRef } from 'react';
 
 export type ButtonRCProps = {
   title?: string;
@@ -7,9 +8,9 @@ export type ButtonRCProps = {
   className?: string;
 };
 
-const ButtonRC = ({ title, children, onClick, className }: ButtonRCProps) => {
+const ButtonRC = forwardRef<HTMLButtonElement, ButtonRCProps>(({ title = '', children, onClick, className }, ref) => {
   return (
-    <button type="button" title={title ?? 'click'} onClick={onClick}>
+    <button ref={ref} type="button" title={title ?? 'click'} onClick={onClick}>
       <RippleDivRC
         className={`w-full inline-flex items-center border bg-white font-semibold hover:text-indigo-700 rounded-full hover:shadow-md ${className} ${title === undefined ? 'p-3' : 'py-2 px-4'}`}
       >
@@ -20,6 +21,6 @@ const ButtonRC = ({ title, children, onClick, className }: ButtonRCProps) => {
       </RippleDivRC>
     </button>
   );
-};
+});
 
 export default ButtonRC;

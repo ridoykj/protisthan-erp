@@ -186,29 +186,21 @@ const RolesView = () => {
               <div className="flex flex-col py-4">
                 <span className="font-semibold text-lg">Personal Information</span>
                 <DetailField title="Name" details={item.id ?? ''} icon={<FaAddressBook />} />
-                <DetailField
-                  title="Disabled"
-                  details={item.isDisabled ? 'Yes' : 'No' ?? ''}
-                  icon={<FaEyeLowVision />}
-                />
+                <DetailField title="Disabled" details={item.isDisabled ? 'Yes' : 'No'} icon={<FaEyeLowVision />} />
                 <DetailField
                   title="Bulk Actions"
-                  details={item.isBulkActions ? 'Yes' : 'No' ?? ''}
+                  details={item.isBulkActions ? 'Yes' : 'No'}
                   icon={<FaEyeLowVision />}
                 />
-                <DetailField
-                  title="Desk Access"
-                  details={item.isDeskAccess ? 'Yes' : 'No' ?? ''}
-                  icon={<FaEyeLowVision />}
-                />
+                <DetailField title="Desk Access" details={item.isDeskAccess ? 'Yes' : 'No'} icon={<FaEyeLowVision />} />
                 <DetailField
                   title="Notifications"
-                  details={item.isNotifications ? 'Yes' : 'No' ?? ''}
+                  details={item.isNotifications ? 'Yes' : 'No'}
                   icon={<FaEyeLowVision />}
                 />
                 <DetailField
                   title="two Factor Auth"
-                  details={item.twoFactorAuth ? 'Yes' : 'No' ?? ''}
+                  details={item.twoFactorAuth ? 'Yes' : 'No'}
                   icon={<FaEyeLowVision />}
                 />
               </div>
@@ -233,7 +225,7 @@ const RolesView = () => {
               alt="not_found"
             />
             <div className="flex flex-col grow items-left">
-              <span className="font-semibold text-lg">{`Name: ${item?.categoryName ?? ''}`}</span>
+              <span className="font-semibold text-lg">{`Name: ${item?.name ?? ''}`}</span>
               <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                 {`ID: ${item?.id ?? ''}`}
               </span>

@@ -7,5 +7,5 @@ export const config: ViewConfig = {
 };
 const ModeView = () => {
   return <div>hello world</div>;
-}
+};
 export default ModeView;

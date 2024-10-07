@@ -32,6 +32,14 @@ public class OrderDetailId implements Serializable {
                 Objects.equals(this.idOrderKey, entity.idOrderKey);
     }
 
+//    public OrderDetailId(Long order, Long item) {
+//        this.order = order;
+//        this.item = item;
+//    }
+
+//    public OrderDetailId() {
+//    }
+
     @Override
     public int hashCode() {
         return Objects.hash(idItemKey, idOrderKey);

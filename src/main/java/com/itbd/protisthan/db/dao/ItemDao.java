@@ -12,6 +12,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -130,6 +131,9 @@ public class ItemDao extends AbstractEntity<Long> {
     @JoinColumn(name = "tx_uom_key", nullable = false)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private UomDao saleUom;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private Set<OrderDetailDao> orderDetails;
 
     @PrePersist
     public void prePersist() {

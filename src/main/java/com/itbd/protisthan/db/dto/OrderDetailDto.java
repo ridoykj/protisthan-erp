@@ -15,8 +15,8 @@ public record OrderDetailDto(@NotNull Double unitPrice,
                              @NotNull Short quantity,
                              @NotNull Double discount,
                              OrderDetailId id,
-                             OrderDao idOrderKey,
-                             ItemDao idItemKey
+                             OrderDao order,
+                             ItemDao item
 ) implements Serializable {
 
     public static OrderDetailDto toDto(OrderDetailDao dao) {
@@ -25,8 +25,8 @@ public record OrderDetailDto(@NotNull Double unitPrice,
                 dao.getQuantity(),
                 dao.getDiscount(),
                 dao.getId(),
-                dao.getIdOrderKey(),
-                dao.getIdItemKey()
+                dao.getOrder(),
+                dao.getItem()
         );
     }
 
@@ -35,7 +35,7 @@ public record OrderDetailDto(@NotNull Double unitPrice,
         dao.setQuantity(dto.quantity());
         dao.setDiscount(dto.discount());
         dao.setId(dto.id());
-        dao.setIdOrderKey(dto.idOrderKey());
-        dao.setIdItemKey(dto.idItemKey());
+        dao.setOrder(dto.order());
+        dao.setItem(dto.item());
     }
 }

@@ -4,29 +4,43 @@
   "java.configuration.updateBuildConfiguration": "automatic",
   "typescript.preferences.includePackageJsonAutoImports": "on",
   "editor.formatOnSave": true,
+  // "eslint.format.enable": true,
   "[javascript]": {
     "editor.formatOnSave": false,
-    "editor.defaultFormatter": null
+    "editor.defaultFormatter": null,
   },
   "[javascriptreact]": {
     "editor.formatOnSave": false,
-    "editor.defaultFormatter": null
+    "editor.defaultFormatter": null,
   },
   "[typescript]": {
     "editor.formatOnSave": false,
-    "editor.defaultFormatter": null
+    "editor.defaultFormatter": null,
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": null,
   },
   "javascript.validate.enable": false, //disable all built-in syntax checking
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
+    // "source.fixAll": "explicit",
     "source.fixAll.eslint": "explicit",
-    "source.fixAll.tslint": "explicit",
-    "source.organizeImports": "explicit"
+    // "source.organizeImports": "always",
+    // "source.removeUnusedImports": "always",
+    "source.addMissingImports.ts": "explicit",
+    "source.sortMembers": "always",
   },
   "eslint.alwaysShowStatus": true,
   // emmet
   "emmet.triggerExpansionOnTab": true,
   "emmet.includeLanguages": {
-    "javascript": "javascriptreact"
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
   }
 }

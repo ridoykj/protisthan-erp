@@ -1,4 +1,4 @@
-package com.desoft.clubapp.clubpayment.config.databases;
+package com.itbd.protisthan.config.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -45,7 +45,7 @@ public abstract class AbstractEntity<U> {
     @LastModifiedBy
     public U modifiedBy;
 
-//    @Column(name = "is_active", nullable = false)
+    //    @Column(name = "is_active", nullable = false)
     @Column(name = "is_active", nullable = false, insertable = false)
     @ColumnDefault("1")
     public Boolean recordActive;
@@ -74,13 +74,14 @@ public abstract class AbstractEntity<U> {
     @ColumnDefault("'?'")
     public String recordComment;
 
-    @PrePersist
-    private void initialValue() {
-        environmentKey = environmentKey != null ? environmentKey : -2147483648;
-        eventKey = eventKey != null ? eventKey : -2147483648;
-        stateKey = stateKey != null ? stateKey : -2147483648;
-        actionKey = actionKey != null ? actionKey : -2147483648;
-    }
+//    @PrePersist
+//    private void initialValue() {
+//        environmentKey = environmentKey != null ? environmentKey : -2147483648;
+//        eventKey = eventKey != null ? eventKey : -2147483648;
+//        stateKey = stateKey != null ? stateKey : -2147483648;
+//        actionKey = actionKey != null ? actionKey : -2147483648;
+//        recordComment = recordComment != null ? recordComment : "?";
+//    }
 
     @Override
     public final int hashCode() {

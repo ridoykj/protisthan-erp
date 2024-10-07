@@ -42,9 +42,14 @@ public class ItemDtoCrudService implements CrudService<ItemDto, Long> {
         return accounts.stream().map(ItemDto::toDto).toList();
     }
 
-    public ItemDto getItem(Long id){
+    public ItemDto getItem(Long id) {
         Optional<ItemDao> item = itemRepo.findById(id);
-       return ItemDto.toDto(item.get());
+        return ItemDto.toDto(item.get());
+    }
+
+    public List<@Nonnull ItemDto> getItems(List<Long> ids) {
+        List<ItemDao> items = itemRepo.findAllById(ids);
+        return items.stream().map(ItemDto::toDto).toList();
     }
 
     @Override
@@ -60,7 +65,6 @@ public class ItemDtoCrudService implements CrudService<ItemDto, Long> {
         ItemDto.toEntity(value, accountDao);
         return ItemDto.toDto(itemRepo.save(accountDao));
     }
-
 
 
     @Override

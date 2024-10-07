@@ -10,16 +10,13 @@ export interface TreeNode extends RouteItem {
 
 function insertRoute(tree: { [key: string]: any }, parts: string[], item: RouteItem) {
   if (parts.length === 0) return;
-
   const part = parts.shift()!;
   if (!tree[part]) {
     tree[part] = { children: {}, item: null };
   }
-
   if (parts.length === 0) {
     tree[part].item = item;
   }
-
   insertRoute(tree[part].children, parts, item);
 }
 

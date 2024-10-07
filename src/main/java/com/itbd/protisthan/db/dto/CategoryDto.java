@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public record CategoryDto(
         Long id,
-        @NotNull @Size(max = 15) String categoryName,
+        @NotNull @Size(max = 15) String name,
         String description,
         String picture
 ) implements Serializable {
@@ -19,7 +19,7 @@ public record CategoryDto(
     public static CategoryDto toDto(CategoryDao dao) {
         return new CategoryDto(
                 dao.getId(),
-                dao.getCategoryName(),
+                dao.getName(),
                 dao.getDescription(),
                 dao.getPicture()
         );
@@ -28,7 +28,7 @@ public record CategoryDto(
     public static void toEntity(CategoryDto dto,
                                 CategoryDao dao) {
         dao.setId(dto.id());
-        dao.setCategoryName(dto.categoryName());
+        dao.setName(dto.name());
         dao.setDescription(dto.description());
         dao.setPicture(dto.picture());
     }

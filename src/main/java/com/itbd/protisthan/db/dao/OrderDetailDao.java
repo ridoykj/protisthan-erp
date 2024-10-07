@@ -1,10 +1,16 @@
 package com.itbd.protisthan.db.dao;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.itbd.protisthan.db.dao.iddao.OrderDetailId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 @Getter
 @Setter
@@ -12,6 +18,8 @@ import lombok.Setter;
 @Table(name = "order_details", schema = "erp_over", indexes = {
         @Index(name = "id_item_key", columnList = "id_item_key")
 })
+@Audited
+@AuditTable(value = "ORDER_DETAIL_AUDIT")
 public class OrderDetailDao {
     @EmbeddedId
     private OrderDetailId id;
@@ -19,12 +27,17 @@ public class OrderDetailDao {
     @MapsId("idOrderKey")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_order_key", nullable = false)
-    private OrderDao idOrderKey;
+    @NotAudited
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private OrderDao order;
 
     @MapsId("idItemKey")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_item_key", nullable = false)
-    private ItemDao idItemKey;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private ItemDao item;
 
     @NotNull
     @Column(name = "flt_unit_price", nullable = false)
